@@ -110,7 +110,78 @@ const User = {
 				})
 			}
 		})
+  	},
+
+  	/**
+   * Login
+   * @param {object} req 
+   * @param {object} res
+   * @returns {object} user object 
+   */
+  	userLogin(req, res, next) {
+    	if (!req.body.email || !req.body.password) {
+    		return res.status(400).json({
+    			"status" : "error",
+    			"message": "Some values are missing"
+    		});
+    	}
+    	if (!Helper.isValidEmail(req.body.email)) {
+    		return res.status(400).json({
+    			"status" : "error", 
+    			"message": "Please enter a valid email address" 
+    		});
+    	}
+    	const text = 'SELECT * FROM users WHERE email = $1';
+    	
+		pool.query(text, [req.body.email], (q_err,q_res)=>{
+			if (!q_res.rows[0]) {
+				return res.status(400).json({
+					"status" : "error", 
+					"message": "The credentials you provided is incorrect"
+				});
+			}
+			if(!Helper.comparePassword(q_res.rows[0].password, req.body.password)) {
+				return res.status(400).json({
+					"status" : "error",
+					"message": "The credentials you provided is incorrect" 
+				});
+			}
+			const token = Helper.generateToken(q_res.rows[0].userid,q_res.rows[0].email,q_res.rows[0].userrole);
+			return res.status(200).json({
+				"status" : "success",
+				data: {
+					token,
+					"userId" :q_res.rows[0].userid
+				}
+			});
+		});
+  	},
+  /**
+   * Delete A User
+   * @param {object} req 
+   * @param {object} res 
+   * @returns {object} 
+   */
+  	deleteUser(req, res, next) {
+	    const deleteQuery = 'DELETE FROM users WHERE userid=$1';
+	    pool.query(deleteQuery, [req.params.userId], (err,result)=>{
+			if(err){
+				return next(err);
+			}
+			if(result.rowCount < 1) {
+	  			res.status(404).json({
+	    			status: 'error',
+	    			message: 'user not found',
+	  			})
+			} else {
+	  			res.status(200).json({  
+	    			status: 'success',
+	    			message: 'user was deleted successfully',
+	  			})
+			}
+		});
   	}
+
 }
 
 export default User;
