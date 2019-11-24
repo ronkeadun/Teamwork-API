@@ -2,7 +2,7 @@ CREATE TABLE admins(
 	adminId SERIAL PRIMARY KEY,
 	email VARCHAR(255),
 	password VARCHAR(255) NOT NULL,
-	userRole VARCHAR(255),
+	userRole VARCHAR(255) NOT NULL DEFAULT 'admin',
 	UNIQUE(email)
 );
 
@@ -25,8 +25,8 @@ CREATE TABLE gifs(
 	gifId SERIAL PRIMARY KEY,
 	title VARCHAR(255),
 	imageUrl VARCHAR(255),
-	createdOn TIMESTAMP,
-	user_id INT REFERENCES users(userId)
+	user_id INT REFERENCES users(userId),
+	createdOn TIMESTAMP
 );
 
 CREATE TABLE articles(

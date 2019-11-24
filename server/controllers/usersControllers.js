@@ -19,7 +19,7 @@ const User = {
     			"message": "You need to provide your email or password"
     		});
     	}
-    	if (req.body.userRole !== "admin") {
+    	if (req.body.userRole !== "admin" ) {
     		return res.status(400).json({
     			"status" : "error",
     			"message": "Only admin can register"
