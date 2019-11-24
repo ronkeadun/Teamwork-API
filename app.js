@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import usersRoutes from "./server/routes/usersRoutes.js";
+import articlesRoutes from "./server/routes/articlesRoutes.js";
 
 const app = express();
 
@@ -22,9 +23,10 @@ app.use((req, res, next)=>{
 })
 
 app.use("/api/v1/auth", usersRoutes);
+app.use("/api/v1", articlesRoutes);
 
 // home page
-app.get("/", (req, res) => {
+app.get("/api/v1", (req, res) => {
   res.status(200).json({
     status: 'success',
     message: 'Welcome to Teamwork API',
