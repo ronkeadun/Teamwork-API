@@ -6,5 +6,7 @@ const router = express.Router();
 
 router.post("/articles", auth.verifyUser, Article.createArticle)
 
+router.patch("/articles/:articleId", auth.verifyUser, Article.editArticle)
+
 
 export default router;
