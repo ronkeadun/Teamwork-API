@@ -72,6 +72,27 @@ const Article = {
 					});
 				})
 		});	
+	},
+
+	deleteArticle(req,res,next){
+	
+		pool.query("DELETE FROM articles WHERE articleid=$1 AND user_id = $2", 
+			[req.params.articleId, req.userData.userId], (err,result)=>{
+			if(err){
+				return next(err);
+			}
+			if(result.rowCount < 1) {
+	  			res.status(404).json({
+	    			status: 'error',
+	    			message: 'article could not be deleted',
+	  			})
+			} else {
+	  			res.status(200).json({  
+	    			status: 'success',
+	    			message: 'article was deleted successfully',
+	  			})
+			}
+		});
 	}
 
 }
