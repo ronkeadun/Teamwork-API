@@ -3,7 +3,7 @@ import pool from '../../db';
 
 const Auth = {
   /**
-   * admin User
+   * verify Admin
    * @param {object} req 
    * @param {object} res 
    * @param {object} next
@@ -31,7 +31,7 @@ const Auth = {
   },
 
   /**
-   * Verify Token
+   * Verify User
    * @param {object} req 
    * @param {object} res 
    * @param {object} next
