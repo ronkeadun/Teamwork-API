@@ -43,7 +43,10 @@ const User = {
 			
 		pool.query(createQuery, values, (q_err,q_res)=>{
 			if(q_err){
-				return next(q_err);		
+				return res.status(400).json({
+		    		"status" : "error",
+		    		"message": q_err.detail
+		    	});		
 			}else{
 				const token = Helper.generateToken(q_res.rows[0].adminid,q_res.rows[0].email,q_res.rows[0].userrole);
 				res.status(201).json({
@@ -96,7 +99,11 @@ const User = {
 			
 		pool.query(createQuery, values, (q_err,q_res)=>{
 			if(q_err){
-				return next(q_err)
+				// return next(q_err)
+				return res.status(400).json({
+		    		"status" : "error",
+		    		"message": q_err.detail
+		    	});
 				
 			}else{
 				const token = Helper.generateToken(q_res.rows[0].userid,q_res.rows[0].email,q_res.rows[0].userrole);

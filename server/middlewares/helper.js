@@ -37,7 +37,7 @@ const Helper = {
       userId: id,
       userEmail: email,
       userRole: role
-    }, process.env.SECRET, { expiresIn: '7d' });
+    }, process.env.SECRET, { expiresIn: '1h' });
     return token;
   }
 

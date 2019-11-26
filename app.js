@@ -3,11 +3,13 @@ import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import usersRoutes from "./server/routes/usersRoutes.js";
 import articlesRoutes from "./server/routes/articlesRoutes.js";
+import gifsRoutes from "./server/routes/gifsRoutes.js";
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use("/public/uploads", express.static("public/uploads"));
 
 
 app.use(morgan('dev'))
@@ -22,8 +24,9 @@ app.use((req, res, next)=>{
 	next()
 })
 
-app.use("/api/v1/auth", usersRoutes);
+app.use("/api/v1", usersRoutes);
 app.use("/api/v1", articlesRoutes);
+app.use("/api/v1", gifsRoutes);
 
 // home page
 app.get("/api/v1", (req, res) => {
