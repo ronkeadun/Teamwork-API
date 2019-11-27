@@ -64,7 +64,39 @@ const Gif = {
 				})	
 			}
 		})		
+	},
 
+	/**
+	* Delete Gif
+	* @param {object} req 
+	* @param {object} res 
+	* @returns {object} updated article
+	*/
+
+	deleteGif(req,res,next){
+	
+		pool.query("DELETE FROM gifs WHERE gifid=$1 AND user_id = $2", 
+			[req.params.gifId, req.userData.userId], (err,result)=>{
+			if(err){
+				return res.status(400).json({
+		    		"status" : "error",
+		    		"message": err
+		    	});
+			}
+			if(result.rowCount < 1) {
+	  			res.status(404).json({
+	    			status: 'error',
+	    			message: 'gif not found',
+	  			})
+			} else {
+	  			res.status(200).json({  
+	    			status: 'success',
+	    			"data": {
+						"message" : "gif post successfully deleted"
+					}
+	  			})
+			}
+		});
 	}
 }
 
