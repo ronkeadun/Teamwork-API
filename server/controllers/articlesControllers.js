@@ -19,8 +19,12 @@ const Article = {
 		pool.query(`INSERT INTO articles(title,article,author,user_id,createdOn)
 			VALUES($1,$2,$3,$4,NOW() ) RETURNING *`,values, 
 			(q_err,q_res)=>{
-				if(q_err) return next(q_err)
-				
+				if(q_err){
+					return res.status(400).json({
+			    		"status" : "error",
+			    		"message": q_err.detail
+			    	});		
+				}
 				res.json({
 					"status" : "success",
 					"data" : {
@@ -60,8 +64,12 @@ const Article = {
 			pool.query(`UPDATE articles SET title=$1,article=$2,author=$3,createdOn=NOW()
 					WHERE articleid=$4 AND user_id = $5 returning *`,values, 
 				(q_err,q_res)=>{
-					if(q_err) return next(q_err);
-					// res.json(q_res.rows[0])
+					if(q_err){
+						return res.status(400).json({
+				    		"status" : "error",
+				    		"message": q_err.detail
+				    	});		
+					}
 					res.status(200).json({
 						"status" : "success",
 						"data" : {
@@ -74,22 +82,35 @@ const Article = {
 		});	
 	},
 
+	/**
+	* Delete Article
+	* @param {object} req 
+	* @param {object} res 
+	* @returns {object} updated article
+	*/
+
 	deleteArticle(req,res,next){
 	
 		pool.query("DELETE FROM articles WHERE articleid=$1 AND user_id = $2", 
 			[req.params.articleId, req.userData.userId], (err,result)=>{
 			if(err){
-				return next(err);
+				// return next(err);
+				return res.status(400).json({
+		    		"status" : "error",
+		    		"message": err
+		    	});	
 			}
 			if(result.rowCount < 1) {
 	  			res.status(404).json({
 	    			status: 'error',
-	    			message: 'article could not be deleted',
+	    			message: 'article not found',
 	  			})
 			} else {
 	  			res.status(200).json({  
 	    			status: 'success',
-	    			message: 'article was deleted successfully',
+	    			"data": {
+						"message" : "Article successfully deleted"
+					}
 	  			})
 			}
 		});

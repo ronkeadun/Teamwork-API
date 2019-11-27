@@ -6,9 +6,7 @@ const router = express.Router();
 
 router.post("/gifs", auth.verifyUser, Gif.createGif)
 
-/*router.patch("/articles/:articleId", auth.verifyUser, Article.editGif)
-
-router.delete("/articles/:articleId", auth.verifyUser, Article.deleteGif)*/
+router.delete("/gifs/:gifId", auth.verifyUser, Gif.deleteGif)
 
 
 export default router;
