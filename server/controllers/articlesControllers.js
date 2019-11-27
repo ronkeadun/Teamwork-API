@@ -123,9 +123,7 @@ const Article = {
    * @returns {object} article object
    */
   	viewSpecificArticle(req, res) {
-	    const text = `SELECT * FROM articles
-	    			WHERE articles.articleid = $1 
-	    			AND articles.user_id = $2`;
+	    const text = "SELECT * FROM articles WHERE articleid = $1 AND user_id = $2";
 	  	pool.query(text, [req.params.articleId, req.userData.userId], (err,result)=>{
 	  		if (err) {
 	    		return res.status(404).json({
@@ -141,7 +139,7 @@ const Article = {
 	    	}
 	    	const text = `SELECT commentid AS "commentId",comment,user_id AS "​authorId" 
 	    				FROM comments
-	    				WHERE comments.article_id = $1`;
+	    				WHERE article_id = $1`;
 		  	pool.query(text, [req.params.articleId], (q_err,q_res)=>{
 		  		if (q_err) {
 		    		return res.status(404).json({
