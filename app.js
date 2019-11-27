@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import usersRoutes from "./server/routes/usersRoutes.js";
 import articlesRoutes from "./server/routes/articlesRoutes.js";
 import gifsRoutes from "./server/routes/gifsRoutes.js";
+import commentsRoutes from "./server/routes/commentsRoutes.js";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use((req, res, next)=>{
 app.use("/api/v1", usersRoutes);
 app.use("/api/v1", articlesRoutes);
 app.use("/api/v1", gifsRoutes);
+app.use("/api/v1", commentsRoutes);
 
 // home page
 app.get("/api/v1", (req, res) => {
