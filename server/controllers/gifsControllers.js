@@ -19,7 +19,7 @@ const Gif = {
    * Create Gif
    * @param {object} req 
    * @param {object} res
-   * @returns {object} user object 
+   * @returns {object} gif object 
    */
 	createGif(req, res, next){
 		upload(req, res, (err) =>{
@@ -70,7 +70,7 @@ const Gif = {
 	* Delete Gif
 	* @param {object} req 
 	* @param {object} res 
-	* @returns {object} updated article
+	* @returns {object} response
 	*/
 
 	deleteGif(req,res,next){
@@ -97,7 +97,53 @@ const Gif = {
 	  			})
 			}
 		});
-	}
+	},
+
+	/**
+   * Get A Gif
+   * @param {object} req 
+   * @param {object} res
+   * @returns {object} gif object
+   */
+  	viewSpecificGif(req, res) {
+	    const text = "SELECT * FROM gifs WHERE gifid = $1 AND user_id = $2";
+	  	pool.query(text, [req.params.gifId, req.userData.userId], (err,result)=>{
+	  		if (err) {
+	    		return res.status(404).json({
+	    			"status": 'error',
+	    			"message": err
+	  			});
+	    	}
+	    	if (!result.rows[0]) {
+	    		return res.status(404).json({
+	    			"status": 'error',
+	    			"message": 'gif not found'
+	  			});
+	    	}
+	    	const text = `SELECT commentid AS "commentId",comment,user_id AS "​authorId" 
+	    				FROM comments
+	    				WHERE gif_id = $1`;
+		  	pool.query(text, [req.params.gifId], (q_err,q_res)=>{
+		  		if (q_err) {
+		    		return res.status(404).json({
+		    			"status": 'error',
+		    			"message": q_err
+		  			});
+		    	}
+
+		    	return res.status(200).json({
+		      		"status" : "success",
+					"data" : {
+						"id": JSON.parse(req.params.gifId),
+						"createdOn": result.rows[0].createdon,
+						"title": result.rows[0].title,
+						"url": result.rows[0].imageurl,
+						"comments": q_res.rows
+					}
+		      	})
+		    })
+	    });
+  	}
 }
 
 export default Gif;

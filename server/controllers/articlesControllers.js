@@ -7,7 +7,7 @@ const Article = {
    * create article
    * @param {object} req 
    * @param {object} res
-   * @returns {object} user object 
+   * @returns {object} article object 
    */
 	createArticle(req,res,next){
 		const values = [
@@ -62,7 +62,7 @@ const Article = {
 			}
 
 			pool.query(`UPDATE articles SET title=$1,article=$2,author=$3,createdOn=NOW()
-					WHERE articleid=$4 AND user_id = $5 returning *`,values, 
+					WHERE articleid=$4 AND user_id = $5 RETURNING *`,values, 
 				(q_err,q_res)=>{
 					if(q_err){
 						return res.status(400).json({
@@ -86,7 +86,7 @@ const Article = {
 	* Delete Article
 	* @param {object} req 
 	* @param {object} res 
-	* @returns {object} updated article
+	* @returns {object} response
 	*/
 
 	deleteArticle(req,res,next){
@@ -102,19 +102,65 @@ const Article = {
 			}
 			if(result.rowCount < 1) {
 	  			res.status(404).json({
-	    			status: 'error',
-	    			message: 'article not found',
+	    			"status": 'error',
+	    			"message": 'article not found',
 	  			})
 			} else {
 	  			res.status(200).json({  
-	    			status: 'success',
+	    			"status": 'success',
 	    			"data": {
 						"message" : "Article successfully deleted"
 					}
 	  			})
 			}
 		});
-	}
+	},
+
+	/**
+   * Get An Article
+   * @param {object} req 
+   * @param {object} res
+   * @returns {object} article object
+   */
+  	viewSpecificArticle(req, res) {
+	    const text = "SELECT * FROM articles WHERE articleid = $1 AND user_id = $2";
+	  	pool.query(text, [req.params.articleId, req.userData.userId], (err,result)=>{
+	  		if (err) {
+	    		return res.status(404).json({
+	    			"status": 'error',
+	    			"message": err
+	  			});
+	    	}
+	    	if (!result.rows[0]) {
+	    		return res.status(404).json({
+	    			"status": 'error',
+	    			"message": 'article not found'
+	  			});
+	    	}
+	    	const text = `SELECT commentid AS "commentId",comment,user_id AS "​authorId" 
+	    				FROM comments
+	    				WHERE article_id = $1`;
+		  	pool.query(text, [req.params.articleId], (q_err,q_res)=>{
+		  		if (q_err) {
+		    		return res.status(404).json({
+		    			"status": 'error',
+		    			"message": q_err
+		  			});
+		    	}
+
+		    	return res.status(200).json({
+		      		"status" : "success",
+					"data" : {
+						"id": JSON.parse(req.params.articleId),
+						"createdOn": result.rows[0].createdon,
+						"title": result.rows[0].title,
+						"article": result.rows[0].article,
+						"comments": q_res.rows
+					}
+		      	})
+		    })
+	    });
+  	}
 
 }
 

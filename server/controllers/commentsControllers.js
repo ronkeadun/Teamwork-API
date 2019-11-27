@@ -7,7 +7,7 @@ const Comment = {
    * create article comment
    * @param {object} req 
    * @param {object} res
-   * @returns {object} user object 
+   * @returns {object} article comment object 
    */
 	createArticleComment(req,res,next){
 		const findOneQuery = 'SELECT * FROM articles WHERE articleid=$1 AND user_id = $2';
@@ -54,7 +54,7 @@ const Comment = {
    * create gif comment
    * @param {object} req 
    * @param {object} res
-   * @returns {object} user object 
+   * @returns {object} gif comment object 
    */
 	createGifComment(req,res,next){
 		const findOneQuery = 'SELECT * FROM gifs WHERE gifid=$1 AND user_id = $2';

@@ -8,5 +8,6 @@ router.post("/gifs", auth.verifyUser, Gif.createGif)
 
 router.delete("/gifs/:gifId", auth.verifyUser, Gif.deleteGif)
 
+router.get("/gifs/:gifId", auth.verifyUser, Gif.viewSpecificGif)
 
 export default router;

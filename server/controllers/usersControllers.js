@@ -9,7 +9,7 @@ const User = {
    * register admin
    * @param {object} req 
    * @param {object} res
-   * @returns {object} user object 
+   * @returns {object} admin object 
    */
 
   	registerAdmin(req, res, next) {  	
@@ -167,7 +167,7 @@ const User = {
    * Delete A User
    * @param {object} req 
    * @param {object} res 
-   * @returns {object} 
+   * @returns {object} response
    */
   	deleteUser(req, res, next) {
 	    const deleteQuery = 'DELETE FROM users WHERE userid=$1';
