@@ -10,4 +10,6 @@ router.delete("/gifs/:gifId", auth.verifyUser, Gif.deleteGif)
 
 router.get("/gifs/:gifId", auth.verifyUser, Gif.viewSpecificGif)
 
+router.get("/feeds", auth.verifyUser, Gif.viewAllGifs)
+
 export default router;

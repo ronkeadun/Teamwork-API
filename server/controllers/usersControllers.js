@@ -173,17 +173,20 @@ const User = {
 	    const deleteQuery = 'DELETE FROM users WHERE userid=$1';
 	    pool.query(deleteQuery, [req.params.userId], (err,result)=>{
 			if(err){
-				return next(err);
+				return res.status(404).json({
+	    			"status": 'error',
+	    			"message": err
+	  			});
 			}
 			if(result.rowCount < 1) {
 	  			res.status(404).json({
-	    			status: 'error',
-	    			message: 'user not found',
+	    			"status": 'error',
+	    			"message": 'user not found',
 	  			})
 			} else {
 	  			res.status(200).json({  
-	    			status: 'success',
-	    			message: 'user was deleted successfully',
+	    			"status": 'success',
+	    			"message": 'user was deleted successfully',
 	  			})
 			}
 		});

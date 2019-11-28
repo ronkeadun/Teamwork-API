@@ -160,7 +160,38 @@ const Article = {
 		      	})
 		    })
 	    });
-  	}
+  	},
+
+  	/**
+   * Get All Articles
+   * @param {object} req 
+   * @param {object} res
+   * @returns {object} articles object
+   */
+  	viewAllArticles(req,res,next){
+  		const text = `SELECT articleid AS "Id",createdon AS "createdOn", title, article, user_id AS "​authorId" 
+	    				FROM articles
+	    				ORDER BY createdOn DESC`;
+		pool.query(text, (err,result)=>{
+			if(err){
+				return res.status(404).json({
+	    			"status": 'error',
+	    			"message": err
+	  			});
+			}
+			if(result.rowCount < 1) {
+	  			res.status(404).json({
+	    			status: 'error',
+	    			message: 'No articles available',
+	  			})
+			} else {
+	  			res.status(200).json({
+	  				"status": 'success',
+	    			"data": result.rows
+	  			})
+			}
+		});
+	}
 
 }
 
