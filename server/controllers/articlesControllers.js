@@ -166,7 +166,7 @@ const Article = {
    * Get All Articles
    * @param {object} req 
    * @param {object} res
-   * @returns {object} article object
+   * @returns {object} articles object
    */
   	viewAllArticles(req,res,next){
   		const text = `SELECT articleid AS "Id",createdon AS "createdOn", title, article, user_id AS "​authorId" 
@@ -190,7 +190,6 @@ const Article = {
 	    			"data": result.rows
 	  			})
 			}
-			console.log(result)
 		});
 	}
 

@@ -143,7 +143,38 @@ const Gif = {
 		      	})
 		    })
 	    });
-  	}
+  	},
+
+  	/**
+   * Get All Gifs
+   * @param {object} req 
+   * @param {object} res
+   * @returns {object} gifs object
+   */
+  	viewAllGifs(req,res,next){
+  		const text = `SELECT gifid AS "Id",createdon AS "createdOn",title,imageUrl AS url,user_id AS "​authorId" 
+	    				FROM gifs
+	    				ORDER BY createdOn DESC`;
+		pool.query(text, (err,result)=>{
+			if(err){
+				return res.status(404).json({
+	    			"status": 'error',
+	    			"message": err
+	  			});
+			}
+			if(result.rowCount < 1) {
+	  			res.status(404).json({
+	    			status: 'error',
+	    			message: 'No gifs available',
+	  			})
+			} else {
+	  			res.status(200).json({
+	  				"status": 'success',
+	    			"data": result.rows
+	  			})
+			}
+		});
+	}
 }
 
 export default Gif;
