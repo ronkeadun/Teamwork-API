@@ -12,5 +12,6 @@ router.delete("/articles/:articleId", auth.verifyUser, Article.deleteArticle)
 
 router.get("/articles/:articleId", auth.verifyUser, Article.viewSpecificArticle)
 
+router.get("/feed", auth.verifyUser, Article.viewAllArticles)
 
 export default router;
