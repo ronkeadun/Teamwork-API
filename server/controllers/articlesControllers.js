@@ -25,7 +25,7 @@ const Article = {
 			    		"message": q_err.detail
 			    	});		
 				}
-				res.json({
+				res.status(201).json({
 					"status" : "success",
 					"data" : {
 						"message" : "Article successfully posted",
