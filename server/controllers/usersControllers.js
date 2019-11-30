@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import pool from "../../db.js";
 import Helper from '../middlewares/helper';
 
-const User = {
+class User{
 
 	/**
    * register admin
@@ -12,7 +12,7 @@ const User = {
    * @returns {object} admin object 
    */
 
-  	registerAdmin(req, res, next) {  	
+  	static registerAdmin(req, res, next) {  	
     	if (!req.body.email || !req.body.password) {
     		return res.status(400).json({
     			"status" : "error",
@@ -43,12 +43,12 @@ const User = {
 			
 		pool.query(createQuery, values, (q_err,q_res)=>{
 			if(q_err){
-				return res.status(400).json({
+				return res.status(409).json({
 		    		"status" : "error",
 		    		"message": q_err.detail
 		    	});		
 			}else{
-				const token = Helper.generateToken(q_res.rows[0].adminid,q_res.rows[0].email,q_res.rows[0].userrole);
+				let token = Helper.generateToken(q_res.rows[0].adminid,q_res.rows[0].email,q_res.rows[0].userrole);
 				res.status(201).json({
 					"status" : "success",
 					"data": {
@@ -59,7 +59,7 @@ const User = {
 				})
 			}
 		})
-  	},
+  	}
 
   /**
    * Create A User
@@ -67,7 +67,7 @@ const User = {
    * @param {object} res
    * @returns {object} user object 
    */
-  	createUser(req, res, next) {
+  	static createUser(req, res, next) {
 	    if (!req.body.email || !req.body.password) {
 	    	return res.status(400).json({
 	    		"status" : "error",
@@ -100,7 +100,7 @@ const User = {
 		pool.query(createQuery, values, (q_err,q_res)=>{
 			if(q_err){
 				// return next(q_err)
-				return res.status(400).json({
+				return res.status(409).json({
 		    		"status" : "error",
 		    		"message": q_err.detail
 		    	});
@@ -117,7 +117,7 @@ const User = {
 				})
 			}
 		})
-  	},
+  	}
 
   	/**
    * Login
@@ -125,7 +125,7 @@ const User = {
    * @param {object} res
    * @returns {object} user object 
    */
-  	userLogin(req, res, next) {
+  	static userLogin(req, res, next) {
     	if (!req.body.email || !req.body.password) {
     		return res.status(400).json({
     			"status" : "error",
@@ -142,7 +142,7 @@ const User = {
     	
 		pool.query(text, [req.body.email], (q_err,q_res)=>{
 			if (!q_res.rows[0]) {
-				return res.status(400).json({
+				return res.status(401).json({
 					"status" : "error", 
 					"message": "The credentials you provided is incorrect"
 				});
@@ -162,14 +162,14 @@ const User = {
 				}
 			});
 		});
-  	},
+  	}
   /**
    * Delete A User
    * @param {object} req 
    * @param {object} res 
    * @returns {object} response
    */
-  	deleteUser(req, res, next) {
+  	static deleteUser(req, res, next) {
 	    const deleteQuery = 'DELETE FROM users WHERE userid=$1';
 	    pool.query(deleteQuery, [req.params.userId], (err,result)=>{
 			if(err){
